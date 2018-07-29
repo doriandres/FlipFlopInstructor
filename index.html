@@ -1,0 +1,129 @@
+<html>
+    <title>
+        FlipFlop Instructor
+    </title>
+    <link rel="icon" 
+      type="image/png" 
+      href="./icon.png" />
+<head>
+    <style>
+        body{
+            font-family: Helvetica, sans-serif;
+            background-color: #e8e8e8;            
+        }
+        h1{
+            padding: 25px;
+            padding-top: 35px;
+            font-size: 42px;
+        }
+        h3{
+            margin-bottom: 5px;
+        }
+        .templates {
+            display: none;
+        }
+        ul {
+            list-style-type: none;               
+        }
+        .btn {
+            cursor: pointer;
+            background-color: blueviolet;
+            border: 3px solid white;
+            color: white;           
+        }
+        input,
+        select,
+        option {
+            padding: 10px;
+            width: 140px;
+        }
+        li{
+            background-color: white;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            width: 600px;
+            padding: 20px;
+            border: 3px solid white;
+        }
+        input[type="submit"] {
+            width: 110px;
+        }  
+        .remove{
+            padding: 10px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }     
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="container">
+            <center>
+                <h1>FlipFlop Instructor</h1>
+                <div class="content">
+                    <ul class="instructions-container">
+                        <li class="new-instruction btn">New Instruction
+                            <b>+</b>
+                        </li>
+                    </ul>
+                </div>
+            </center>
+        </div>
+    </main>
+    <div class="templates">
+        <li class="instruction">
+            <form>
+                <span class="field">
+                    <span title="Remove Instruction" class="remove btn"><b>-</b></span>
+                </span>
+                <span class="field">
+                    <select class="type" required>
+                        <option disabled value="">
+                            Select Flip Flop Type
+                        </option>
+                        <option value="t">T</option>
+                        <option value="d">D</option>
+                    </select>
+                </span>
+                <span class="field">
+                    <input placeholder="Current number" class="current-number" type="tel" pattern="[0-9]" required>
+                </span>
+                <span class="field">
+                    <input placeholder="Desired number" class="desired-number" type="tel" pattern="[0-9]" required>
+                </span>
+                <span class="field">
+                    <input class="btn" type="submit" value="Get Instruction">
+                </span>
+                <h3 class="result"></h3>
+            </form>
+        </li>
+    </div>
+</body>
+<script src="./flipFlopT.js"></script>
+<script>
+    (() => {
+        let instructionsContainer = document.querySelector('.instructions-container');
+        let instructionTemplate = document.querySelector('.templates .instruction');
+        let newInstructionBtn = document.querySelector('.new-instruction');
+        function createHTML(codeString) {
+            return document.createRange().createContextualFragment(codeString).querySelector("*");
+        }
+        newInstructionBtn.addEventListener('click', () => {
+            let instruction = createHTML(instructionTemplate.outerHTML);
+            let typeField = instruction.querySelector('select');
+            let currentNumberField = instruction.querySelector('.current-number');
+            let desiredNumberField = instruction.querySelector('.desired-number');
+            let resultField = instruction.querySelector('.result');            
+            instructionsContainer.insertBefore(instruction, newInstructionBtn);
+            instruction.querySelector('.remove').addEventListener('click', ()=>{
+                instructionsContainer.removeChild(instruction);
+            });
+            instruction.querySelector('form').addEventListener('submit', (event) => {
+                event.preventDefault();
+                resultField.textContent = getFlipFlopInstructions(typeField.value, parseInt(currentNumberField.value), parseInt(desiredNumberField.value)).map(item => item +false).join('');
+            });
+        });
+    })();
+</script>
+
+</html>
